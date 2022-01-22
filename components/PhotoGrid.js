@@ -4,7 +4,7 @@ import { Dimensions, FlatList, Image, TouchableOpacity } from 'react-native'
 import { formatPhotoUri } from '../api/api'
 
 
-export default function PhotoGrid({ photos, numColumns, onEndReached }) {
+export default function PhotoGrid({ photos, numColumns, onEndReached, navigation }) {
   const { width } = Dimensions.get('window')
 
   const size = width / numColumns
@@ -17,7 +17,9 @@ export default function PhotoGrid({ photos, numColumns, onEndReached }) {
       onEndReached={onEndReached}
       renderItem={({ item }) => (
         <TouchableOpacity
-            onPress={() => console.log("Details")}
+            onPress={() => navigation.navigate('Details', {
+              item : item
+            }) }
         >
             <Image
               source={{

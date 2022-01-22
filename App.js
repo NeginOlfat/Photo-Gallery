@@ -1,56 +1,19 @@
-import React, { useEffect, useReducer, useCallback } from 'react'
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import HomeScreen from "./screen/HomeScreen";
+import DetailsScreen from "./screen/DetailsScreen";
 
-import { getData } from './api/api'
-import { actionCreators, initialState, reducer } from './reducers/photos'
-import PhotoGrid from './components/PhotoGrid'
-
-export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  const { photos, nextPage, loading, error } = state
-
-  const fetchPhotos = useCallback(async () => {
-    dispatch(actionCreators.loading())
-
-    try {
-      const nextPhotos = await getData(nextPage)
-      dispatch(actionCreators.success(nextPhotos, nextPage))
-    } catch (e) {
-      dispatch(actionCreators.failure())
-    }
-  }, [nextPage])
-
-  useEffect(() => {
-    fetchPhotos()
-  }, [])
-
-  if (photos.length === 0) {
-    if (loading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator animating={true} />
-        </View>
-      )
-    }
-
-    if (error) {
-      return (
-        <View style={styles.container}>
-          <Text>Failed to load photos!</Text>
-        </View>
-      )
-    }
-  }
-
-  return <PhotoGrid numColumns={3} photos={photos} onEndReached={fetchPhotos} />
+const Stack = createNativeStackNavigator();
+const App = () =>{
+  return(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='Home' component={HomeScreen} />
+        <Stack.Screen name='Details' component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+export default App;
